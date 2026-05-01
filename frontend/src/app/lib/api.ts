@@ -1,19 +1,19 @@
 /**
- * Mike API client — all requests to the Node.js backend.
+ * Assistant API client — all requests to the Node.js backend.
  * Attaches the Supabase auth token for user authentication.
  */
 
 import { supabase } from "@/lib/supabase";
 import type {
     AssistantEvent,
-    MikeChat,
-    MikeChatDetailOut,
-    MikeCitationAnnotation,
-    MikeDocument,
-    MikeFolder,
-    MikeMessage,
-    MikeProject,
-    MikeWorkflow,
+    AssistantChat,
+    AssistantChatDetailOut,
+    AssistantCitationAnnotation,
+    AssistantDocument,
+    AssistantFolder,
+    AssistantMessage,
+    AssistantProject,
+    AssistantWorkflow,
     TabularReview,
     TabularReviewDetailOut,
 } from "@/app/components/shared/types";
@@ -26,11 +26,11 @@ interface ServerMessage {
     content: string | AssistantEvent[] | null;
     files?: { filename: string; document_id?: string }[] | null;
     workflow?: { id: string; title: string } | null;
-    annotations?: MikeCitationAnnotation[] | null;
+    annotations?: AssistantCitationAnnotation[] | null;
     created_at: string;
 }
 interface ServerChatDetailOut {
-    chat: MikeChat;
+    chat: AssistantChat;
     messages: ServerMessage[];
 }
 
@@ -77,16 +77,16 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
 // Projects
 // ---------------------------------------------------------------------------
 
-export async function listProjects(): Promise<MikeProject[]> {
-    return apiRequest<MikeProject[]>("/projects");
+export async function listProjects(): Promise<AssistantProject[]> {
+    return apiRequest<AssistantProject[]>("/projects");
 }
 
 export async function createProject(
     name: string,
     cm_number?: string,
     shared_with?: string[],
-): Promise<MikeProject> {
-    return apiRequest<MikeProject>("/projects", {
+): Promise<AssistantProject> {
+    return apiRequest<AssistantProject>("/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, cm_number, shared_with }),
@@ -97,8 +97,8 @@ export async function deleteAccount(): Promise<void> {
     return apiRequest<void>("/user/account", { method: "DELETE" });
 }
 
-export async function getProject(projectId: string): Promise<MikeProject> {
-    return apiRequest<MikeProject>(`/projects/${projectId}`);
+export async function getProject(projectId: string): Promise<AssistantProject> {
+    return apiRequest<AssistantProject>(`/projects/${projectId}`);
 }
 
 export async function updateProject(
@@ -108,8 +108,8 @@ export async function updateProject(
         cm_number?: string;
         shared_with?: string[];
     },
-): Promise<MikeProject> {
-    return apiRequest<MikeProject>(`/projects/${projectId}`, {
+): Promise<AssistantProject> {
+    return apiRequest<AssistantProject>(`/projects/${projectId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -147,8 +147,8 @@ export async function createProjectFolder(
     projectId: string,
     name: string,
     parentFolderId?: string | null,
-): Promise<MikeFolder> {
-    return apiRequest<MikeFolder>(`/projects/${projectId}/folders`, {
+): Promise<AssistantFolder> {
+    return apiRequest<AssistantFolder>(`/projects/${projectId}/folders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -162,8 +162,8 @@ export async function renameProjectFolder(
     projectId: string,
     folderId: string,
     name: string,
-): Promise<MikeFolder> {
-    return apiRequest<MikeFolder>(
+): Promise<AssistantFolder> {
+    return apiRequest<AssistantFolder>(
         `/projects/${projectId}/folders/${folderId}`,
         {
             method: "PATCH",
@@ -186,8 +186,8 @@ export async function moveSubfolderToFolder(
     projectId: string,
     folderId: string,
     parentFolderId: string | null,
-): Promise<MikeFolder> {
-    return apiRequest<MikeFolder>(
+): Promise<AssistantFolder> {
+    return apiRequest<AssistantFolder>(
         `/projects/${projectId}/folders/${folderId}`,
         {
             method: "PATCH",
@@ -201,8 +201,8 @@ export async function moveDocumentToFolder(
     projectId: string,
     documentId: string,
     folderId: string | null,
-): Promise<MikeDocument> {
-    return apiRequest<MikeDocument>(
+): Promise<AssistantDocument> {
+    return apiRequest<AssistantDocument>(
         `/projects/${projectId}/documents/${documentId}/folder`,
         {
             method: "PATCH",
@@ -215,14 +215,14 @@ export async function moveDocumentToFolder(
 export async function addDocumentToProject(
     projectId: string,
     documentId: string,
-): Promise<MikeDocument> {
-    return apiRequest<MikeDocument>(
+): Promise<AssistantDocument> {
+    return apiRequest<AssistantDocument>(
         `/projects/${projectId}/documents/${documentId}`,
         { method: "POST" },
     );
 }
 
-export interface MikeDocumentVersion {
+export interface AssistantDocumentVersion {
     id: string;
     version_number: number | null;
     source: string;
@@ -234,7 +234,7 @@ export async function listDocumentVersions(
     documentId: string,
 ): Promise<{
     current_version_id: string | null;
-    versions: MikeDocumentVersion[];
+    versions: AssistantDocumentVersion[];
 }> {
     return apiRequest(`/single-documents/${documentId}/versions`);
 }
@@ -243,7 +243,7 @@ export async function uploadDocumentVersion(
     documentId: string,
     file: File,
     displayName?: string,
-): Promise<MikeDocumentVersion> {
+): Promise<AssistantDocumentVersion> {
     const authHeaders = await getAuthHeader();
     const form = new FormData();
     form.append("file", file);
@@ -257,15 +257,15 @@ export async function uploadDocumentVersion(
         },
     );
     if (!response.ok) throw new Error(await response.text());
-    return response.json() as Promise<MikeDocumentVersion>;
+    return response.json() as Promise<AssistantDocumentVersion>;
 }
 
 export async function renameDocumentVersion(
     documentId: string,
     versionId: string,
     displayName: string | null,
-): Promise<MikeDocumentVersion> {
-    return apiRequest<MikeDocumentVersion>(
+): Promise<AssistantDocumentVersion> {
+    return apiRequest<AssistantDocumentVersion>(
         `/single-documents/${documentId}/versions/${versionId}`,
         {
             method: "PATCH",
@@ -278,7 +278,7 @@ export async function renameDocumentVersion(
 export async function uploadProjectDocument(
     projectId: string,
     file: File,
-): Promise<MikeDocument> {
+): Promise<AssistantDocument> {
     const authHeaders = await getAuthHeader();
     const form = new FormData();
     form.append("file", file);
@@ -291,12 +291,12 @@ export async function uploadProjectDocument(
         },
     );
     if (!response.ok) throw new Error(await response.text());
-    return response.json() as Promise<MikeDocument>;
+    return response.json() as Promise<AssistantDocument>;
 }
 
 export async function uploadStandaloneDocument(
     file: File,
-): Promise<MikeDocument> {
+): Promise<AssistantDocument> {
     const authHeaders = await getAuthHeader();
     const form = new FormData();
     form.append("file", file);
@@ -306,11 +306,11 @@ export async function uploadStandaloneDocument(
         body: form,
     });
     if (!response.ok) throw new Error(await response.text());
-    return response.json() as Promise<MikeDocument>;
+    return response.json() as Promise<AssistantDocument>;
 }
 
-export async function listStandaloneDocuments(): Promise<MikeDocument[]> {
-    return apiRequest<MikeDocument[]>("/single-documents");
+export async function listStandaloneDocuments(): Promise<AssistantDocument[]> {
+    return apiRequest<AssistantDocument[]>("/single-documents");
 }
 
 export async function deleteDocument(documentId: string): Promise<void> {
@@ -361,17 +361,17 @@ export async function createChat(payload?: {
     });
 }
 
-export async function listChats(): Promise<MikeChat[]> {
-    return apiRequest<MikeChat[]>("/chat");
+export async function listChats(): Promise<AssistantChat[]> {
+    return apiRequest<AssistantChat[]>("/chat");
 }
 
-export async function listProjectChats(projectId: string): Promise<MikeChat[]> {
-    return apiRequest<MikeChat[]>(`/projects/${projectId}/chats`);
+export async function listProjectChats(projectId: string): Promise<AssistantChat[]> {
+    return apiRequest<AssistantChat[]>(`/projects/${projectId}/chats`);
 }
 
-export async function getChat(chatId: string): Promise<MikeChatDetailOut> {
+export async function getChat(chatId: string): Promise<AssistantChatDetailOut> {
     const raw = await apiRequest<ServerChatDetailOut>(`/chat/${chatId}`);
-    const messages: MikeMessage[] = raw.messages.map((m) => {
+    const messages: AssistantMessage[] = raw.messages.map((m) => {
         if (m.role === "user") {
             return {
                 role: "user",
@@ -559,7 +559,7 @@ export async function uploadReviewDocument(
         documentIds?: string[];
         columnsConfig?: { index: number; name: string; prompt: string }[];
     },
-): Promise<MikeDocument> {
+): Promise<AssistantDocument> {
     const uploaded = options?.projectId
         ? await uploadProjectDocument(options.projectId, file)
         : await uploadStandaloneDocument(file);
@@ -721,16 +721,16 @@ export async function clearTabularCells(
 // Workflows
 // ---------------------------------------------------------------------------
 
-type WorkflowType = MikeWorkflow["type"];
+type WorkflowType = AssistantWorkflow["type"];
 
 export async function listWorkflows(
     type: WorkflowType,
-): Promise<MikeWorkflow[]> {
-    return apiRequest<MikeWorkflow[]>(`/workflows?type=${type}`);
+): Promise<AssistantWorkflow[]> {
+    return apiRequest<AssistantWorkflow[]>(`/workflows?type=${type}`);
 }
 
-export async function getWorkflow(workflowId: string): Promise<MikeWorkflow> {
-    return apiRequest<MikeWorkflow>(`/workflows/${workflowId}`);
+export async function getWorkflow(workflowId: string): Promise<AssistantWorkflow> {
+    return apiRequest<AssistantWorkflow>(`/workflows/${workflowId}`);
 }
 
 export async function createWorkflow(payload: {
@@ -739,8 +739,8 @@ export async function createWorkflow(payload: {
     prompt_md?: string;
     columns_config?: { index: number; name: string; prompt: string }[];
     practice?: string | null;
-}): Promise<MikeWorkflow> {
-    return apiRequest<MikeWorkflow>("/workflows", {
+}): Promise<AssistantWorkflow> {
+    return apiRequest<AssistantWorkflow>("/workflows", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -755,8 +755,8 @@ export async function updateWorkflow(
         columns_config?: { index: number; name: string; prompt: string }[];
         practice?: string | null;
     },
-): Promise<MikeWorkflow> {
-    return apiRequest<MikeWorkflow>(`/workflows/${workflowId}`, {
+): Promise<AssistantWorkflow> {
+    return apiRequest<AssistantWorkflow>(`/workflows/${workflowId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

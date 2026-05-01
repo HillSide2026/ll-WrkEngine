@@ -6,16 +6,16 @@ import {
     addDocumentToProject,
     createProject,
     uploadProjectDocument,
-} from "@/app/lib/mikeApi";
+} from "@/app/lib/api";
 import { useDirectoryData } from "../shared/useDirectoryData";
 import { FileDirectory } from "../shared/FileDirectory";
 import { EmailPillInput } from "../shared/EmailPillInput";
-import type { MikeProject } from "../shared/types";
+import type { AssistantProject } from "../shared/types";
 
 interface Props {
     open: boolean;
     onClose: () => void;
-    onCreated: (project: MikeProject) => void;
+    onCreated: (project: AssistantProject) => void;
 }
 
 export function NewProjectModal({ open, onClose, onCreated }: Props) {

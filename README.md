@@ -1,6 +1,6 @@
-# Mike
+# Assistant
 
-Open-source release containing the Mike frontend and backend.
+Open-source release containing the Assistant frontend and backend.
 
 ## Contents
 
@@ -38,7 +38,7 @@ Start the frontend:
 npm run dev --prefix frontend
 ```
 
-Open `http://localhost:3000`.
+Open `/`.
 
 ## Required Services
 
@@ -57,4 +57,4 @@ npm run lint --prefix frontend
 
 ## License
 
-AGPL-3.0-only. See `LICENSE`.
+MIT. See `LICENSE`.

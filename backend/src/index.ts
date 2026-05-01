@@ -15,7 +15,7 @@ const PORT = process.env.PORT ?? 3001;
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
+    origin: process.env.FRONTEND_URL ?? "/",
     credentials: true,
   }),
 );
@@ -35,5 +35,5 @@ app.use("/download", downloadsRouter);
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.listen(PORT, () => {
-  console.log(`Mike backend running on port ${PORT}`);
+  console.log(`Assistant backend running on port ${PORT}`);
 });
