@@ -13,15 +13,14 @@ import { AssistantWorkflowModal } from "./AssistantWorkflowModal";
 import type {
     AssistantCitationAnnotation,
     AssistantEditAnnotation,
-    AssistantMessage,
 } from "../shared/types";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { invalidateDocxBytes } from "@/app/hooks/useFetchDocxBytes";
 
 interface Props {
-    messages: AssistantMessage[];
+    messages: AssistantMessageType[];
     isResponseLoading: boolean;
-    handleChat: (message: AssistantMessage) => Promise<string | null>;
+    handleChat: (message: AssistantMessageType) => Promise<string | null>;
     cancel: () => void;
 }
 

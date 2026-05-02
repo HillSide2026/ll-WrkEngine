@@ -51,7 +51,7 @@ import type {
     AssistantCitationAnnotation,
     AssistantDocument,
     AssistantEditAnnotation,
-    AssistantMessage,
+    AssistantMessageType,
     AssistantProject,
 } from "@/app/components/shared/types";
 import { expandCitationToEntries } from "@/app/components/shared/types";
