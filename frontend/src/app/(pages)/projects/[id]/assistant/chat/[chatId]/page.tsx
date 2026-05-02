@@ -51,7 +51,7 @@ import type {
     AssistantCitationAnnotation,
     AssistantDocument,
     AssistantEditAnnotation,
-    AssistantMessageType,
+    AssistantMessage as AssistantMessageType,
     AssistantProject,
 } from "@/app/components/shared/types";
 import { expandCitationToEntries } from "@/app/components/shared/types";
@@ -253,7 +253,9 @@ export default function ProjectAssistantChatPage({ params }: Props) {
         chats,
         saveChat,
     } = useChatHistoryContext();
-    const [initialMessages] = useState<AssistantMessage[]>(newChatMessages ?? []);
+    const [initialMessages] = useState<AssistantMessageType[]>(
+        newChatMessages ?? [],
+    );
     const { messages, isResponseLoading, handleChat, setMessages, cancel } =
         useAssistantChat({ initialMessages, chatId, projectId });
 
@@ -469,7 +471,7 @@ export default function ProjectAssistantChatPage({ params }: Props) {
 
     // ── Handlers ──────────────────────────────────────────────────────────────
     const handleSubmit = useCallback(
-        (message: AssistantMessage) => {
+        (message: AssistantMessageType) => {
             if (!activeTab) return handleChat(message);
             return handleChat(message, {
                 displayedDoc: {

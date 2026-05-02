@@ -13,6 +13,7 @@ import { AssistantWorkflowModal } from "./AssistantWorkflowModal";
 import type {
     AssistantCitationAnnotation,
     AssistantEditAnnotation,
+    AssistantMessage as AssistantMessageType,
 } from "../shared/types";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { invalidateDocxBytes } from "@/app/hooks/useFetchDocxBytes";
